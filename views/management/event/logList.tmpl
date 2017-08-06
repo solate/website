@@ -1,0 +1,293 @@
+{{ $css := list "/static/css/select2.css" "/static/css/style.default.table.css" "/static//css/bootstrap-datetimepicker.min.css" }}
+{{ $js := list "/static/js/select2.min.js" "/static//js/bootstrap-datetimepicker.min.js" "/static//js/bootstrap-datetimepicker.zh-CN.js" }}
+{{ $m := map }}
+{{ template "header.tmpl" addToMap "css" $css $m | addToMap "js" $js | addToMap "ctx" . }}
+
+<div class="pageheader">
+    <h2><i class="fa fa-table"></i>消息推送失败日志</h2>
+</div>
+
+<div class="contentpanel">
+    <div class="panel panel-default">
+
+        {{template "alert.tmpl" .}}
+
+        <div class="panel-heading">
+            <h3 class="panel-title">查询</h3>
+            <form class="form-horizontal form-bordered" action="" method="get">
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">订阅者key: <span class="asterisk"></span></label>
+                    <div class="col-sm-5">
+                        <input type="text" name="subscriber_key" class="form-control" value="{{.subscriberKey}}" placeholder="请输入订阅者 ..."  />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">消息类型key: <span class="asterisk"></span></label>
+                    <div class="col-sm-5">
+                        <input type="text" name="class_key" class="form-control" value="{{.classKey}}" placeholder="请输入消息类型key ..."  />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">重推状态： <span class="asterisk"></span></label>
+                    <div class="col-sm-9">
+                        <div class="radio-inline">
+                            <input type="radio" name="alive" value="1" {{if eq .alive "1" }} checked {{end}} /> 队列中
+                        </div>
+                        <div class="radio-inline">
+                            <input type="radio" name="alive" value="0" {{if eq .alive "0" }} checked {{end}} /> 已停止
+                        </div>
+                        <div class="radio-inline">
+                            <input type="radio" name="alive" value="" {{if eq .alive "" }} checked {{end}}  /> 所有
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">重推次数: <span class="asterisk"></span></label>
+                    <div class="col-sm-5">
+                        <input class="form-control" name="retry_times" type="number" min="0" value="{{.retryTimes}}" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">最后一次推送结果： <span class="asterisk"></span></label>
+                    <div class="col-sm-9">
+                        <div class="radio-inline">
+                            <input type="radio" name="final_status" value="1" {{if eq .finalStatus "1" }} checked {{end}} /> 成功
+                        </div>
+                        <div class="radio-inline">
+                            <input type="radio" name="final_status" value="0" {{if eq .finalStatus "0" }} checked {{end}} /> 失败
+                        </div>
+                        <div class="radio-inline">
+                            <input type="radio" name="final_status" value="" {{if eq .finalStatus "" }} checked {{end}} /> 所有
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">首次推送时间： <span class="asterisk"></span></label>
+                    <div class="col-sm-9 form-inline">
+                        <div class="input-group date form_datetime col-md-5">
+                            <input class="form-control" name="first_push_time_start" size="16" type="text" value="{{.firstTime}}" readonly data-date="{{.firstTime}}">
+                            <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
+                            <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+                        </div>
+                        -
+                        <div class="input-group date form_datetime col-md-5 ">
+                            <input class="form-control" name="first_push_time_end" size="16" type="text" value="{{.endTime}}" readonly data-date="{{.endTime}}">
+                            <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
+                            <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-5 col-sm-offset-3">
+                        <button class="btn btn-primary">查询</button>
+                    </div>
+                </div>
+            </form>
+
+        </div>
+    </div>
+
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h4 class="panel-title">消息恢复</h4>
+        </div>
+        <div class="panel-body">
+            <div class="fluid-container form-horizontal">
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">队列服务器: <span class="asterisk"></span></label>
+                    <div class="col-sm-5">
+                        <select id="dest_host" class="select2" multiple="multiple" name="host" >
+                        {{range $k,$nsq :=.hosts}}
+                            <option  disabled="disabled">{{$k}}</option>
+                            {{range $_,$host :=$nsq}}
+                            <option value="{{$host.Host}}" >{{$host.Host}}:{{$host.Port}}</option>
+                            {{end}}
+                        {{end}}
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-sm-3 control-label"> <span class="asterisk"></span></label>
+                    <div class="col-sm-9">
+                        <div class="radio-inline" id="tip-restore-to-queue">
+                            <input type="radio" name="restore_method" value="normal"  checked  title="将已经不在消息队列中,并且最终推送失败的消息重新恢复至队列中." /> 普通恢复
+                        </div>
+                        <div class="radio-inline" id="tip-force-restore-to-queue">
+                            <input type="radio" name="restore_method" value="force"  title="有些消息可能还在消息队列中，如果您能确认队列中已无相应的消息，或者消息Worker有完善的消息去重机制，则可进行此操作！" >
+                                <span class="text-error">强制恢复</span>
+                            </input>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label"><span class="asterisk"></span></label>
+                    <div class="col-sm-9">
+                        <div class="checkbox-inline">
+                            <input type="checkbox" id="checkall" />全部
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-5 col-sm-offset-3">
+                        <button id="btn-restore-to-queue" class="btn btn-danger">恢复</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h4 class="panel-title">日志列表</h4>
+        </div>
+        <div class="panel-footer">
+            <div class="table-responsive">
+                <div>
+                    {{ template "perPageNums.tmpl" .}}
+                </div>
+                <div>
+                    {{ template "paginator.tmpl" .}}
+                </div>
+
+                <form method="post" id="form-restore-job" action="/Event/RestoreMessage">
+                    <input type="hidden" name="type" />
+                    <input type="hidden" name="dest_host" />
+
+                    <table class="table table-layout" id="dataTable">
+                        <thead>
+                        <tr>
+                            <th>日志ID</th>
+                            <th>订阅者</th>
+                            <th>消息分类</th>
+                            <th>消息提交时间</th>
+                            <th>首次推送时间</th>
+                            <th>重推次数</th>
+                            <th>上次重推时间</th>
+                            <th>最后一次推送状态</th>
+                            <th>已停止推送</th>
+                        </tr>
+
+                        </thead>
+                        <tbody>
+                        {{range $_,$log :=.list}}
+                        <tr class="odd gradeX">
+                            <td class="table-min-width">
+                                <div class="col-lg-1">
+                                    <input type="checkbox" name="log_id[]" value="{{$log.LogId}}" can-be-restored="{{$log.CanbeRestored}}" />
+                                </div>
+                                <div class="col-lg-1">
+                                    <a title="查看日志详细内容" href="/Event/LogDetail?id={{$log.LogId}}">{{$log.LogId}}</a>
+                                </div>
+                            </td>
+                            <td class="table-word-break">{{$log.SubscriberName}}({{$log.SubscriberKey}})</td>
+                            <td class="table-word-break">{{$log.ClassName}}({{$log.ClassKey}})</td>
+                            <td class="table-word-break">{{timeFormatNano $log.MessageTime}}</td>
+                            <td class="table-word-break">{{timeFormat $log.Time}}</td>
+                            <td class="table-word-break">{{$log.RetryTimes}}</td>
+                            <td class="table-word-break">{{timeFormat $log.LastRetryTime}}</td>
+                            <td class="table-word-break">{{if eq $log.FinalStatus 1}}接收成功{{else}}接收失败{{end}}</td>
+                            {{if $log.Alive}}
+                            <td class="badge-warning" title="点击“恢复”操作可将消息送入重试队列。">是<span class="icon-info-sign" ></span></td>
+                            {{else}}
+                            <td>否</td>
+                            {{end}}
+                        </tr>
+                        {{end}}
+                        </tbody>
+                    </table>
+                </form>
+
+                <div>
+                    {{ template "paginator.tmpl" .}}
+                </div>
+            </div><!-- table-responsive -->
+
+        </div><!-- panel-body -->
+    </div><!-- panel -->
+
+</div><!-- contentpanel -->
+
+<script>
+    jQuery(document).ready(function() {
+
+        // Select2
+        jQuery(".select2").select2({
+            width: '100%'
+        });
+
+        $('.form_datetime').datetimepicker({format: 'yyyy-mm-dd hh:ii:ss', language:'zh-CN', todayBtn:1, autoclose:1, showMeridian:1});
+
+        $('#tip-restore-to-queue').tooltip({html: true, title: "将已经不在消息队列中,并且最终推送失败的消息重新恢复至队列中."});
+        $('#tip-force-restore-to-queue').tooltip({html: true, title: "有些消息可能还在消息队列中，如果您能确认队列中已无相应的消息，或者消息Worker有完善的消息去重机制，则可进行此操作！"});
+
+        $('#checkall').click(function(){
+            var checked = this.checked;
+            $('input[name^=log_id]').each(function(){
+                        if($(this).attr('can-be-restored') || $('#tip-force-restore-to-queue').attr('checked')){
+                            this.checked=checked;
+                        }
+                        else{
+                            this.checked = false;
+                        }
+                    }
+            );
+        });
+
+        function refine_log_id_fields()
+        {
+            var ids = [];
+            $('input[name^=log_id]:checked').each(function(){ids.push(this.value)});
+            $('input[name^=log_id]').attr('disabled', true);
+            $('<input type="hidden" name="log_id" />').val(ids.join(',')).appendTo('#form-restore-job');
+
+        }
+        $('#btn-restore-to-queue').click(function(){
+            var confirmed = false;
+            if($('#tip-force-restore-to-queue').attr('checked')){
+                confirmed = confirm('确认强制恢复至队列中?！\n此操作可能造成不正常的重复推送，\n您确定需要进行此操作码？');
+            } else {
+                confirmed = confirm('确认恢复至队列中?！');
+            }
+            if(!confirmed){
+                return false;
+            }
+            var logs = [];
+            $('input[name^=log_id]').each(function(){
+                        if(this.checked && ($('#tip-force-restore-to-queue').attr('checked') ||  $(this).attr('can-be-restored')))
+                        {
+                            logs.push(this.value);
+                        }
+                        else
+                        {
+                            this.checked = false;
+                        }
+                    }
+            );
+            if(logs.length < 1)
+            {
+                alert('请选择需要恢复的推送！');
+                return false;
+            }
+
+            if(!$('#dest_host').val()){
+                alert('请选择队列服务器！');
+                return false;
+            } else{
+                $('input[name=dest_host]').val($('#dest_host').val().join(','));
+            }
+
+            refine_log_id_fields();
+            $('#form-restore-job').submit();
+        });
+
+        $('#dest_host').css('height', $('#dest_host')[0].scrollHeight);
+
+
+    });
+
+</script>
+
+
+
+{{template "footer.tmpl" .}}

@@ -1,0 +1,47 @@
+<style>
+.dataTables_length {
+    float: left;
+    margin-bottom: 10px;
+}
+
+.dataTables_length::after {
+    clear: both;
+    display: block;
+    content: '';
+}
+
+.dataTables_length label {
+    position: relative;
+    display: inline-block;
+    margin-bottom: 0;
+    font-weight: normal;
+    vertical-align: middle;
+    cursor: pointer;
+}
+</style>
+
+<div class="dataTables_length">
+    <label>每页</label>
+    <label>
+        <form id="perPage" class="form-horizontal form-bordered" action="" method="get" >
+            <select id="perPageSelect" name="perPageNums" onchange="document.getElementById('perPage').submit();" >
+                <option value="10" {{if eq .paginator.PerPageNums 10}}selected="true"{{end}}>10</option>
+                <option value="25" {{if eq .paginator.PerPageNums 25}}selected="true"{{end}}>25</option>
+                <option value="50" {{if eq .paginator.PerPageNums 50}}selected="true"{{end}}>50</option>
+                <option value="100" {{if eq .paginator.PerPageNums 100}}selected="true"{{end}}>100</option>
+            </select>
+        </form>
+    </label>
+    <label>行</label>
+</div>
+
+<script>
+    jQuery(document).ready(function() {
+        // Select2
+        jQuery("#perPageSelect").select2({
+            width: '100%',
+            minimumResultsForSearch: -1
+        });
+    });
+
+</script>

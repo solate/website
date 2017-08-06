@@ -1,0 +1,79 @@
+{{ $m := map }}
+{{ template "header.tmpl" addToMap "ctx" . $m }}
+
+<style>
+    .num_range_field{width: 60px; }
+</style>
+
+<div class="pageheader">
+    <h2><i class="fa fa-table"></i>消息队列Redis使用情况</h2>
+</div>
+
+<div class="contentpanel">
+    <div class="panel panel-default">
+
+        {{template "alert.tmpl" .}}
+
+        <div class="panel-body">
+            <h3 class="panel-title">查询</h3>
+            <form class="form-horizontal form-bordered" action="" method="get">
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">范围:<span class="asterisk"></span></label>
+                    <div class="col-sm-9">
+                        <input class="num_range_field" name="index_start" type="number" min="0" value="<?php echo is_null($indexStart)? '' : $indexStart;?>"/>
+                        -
+                        <input class="num_range_field" name="index_end" type="number" min="0" value="<?php echo is_null($indexEnd)? '' : $indexEnd;?>"/>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-5 col-sm-offset-3">
+                        <button class="btn btn-primary">查看</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+
+        <div class="panel-footer">
+            <div class="table-responsive">
+
+                {{range $key,$len :=.failureLogKeys}}
+                <li style="list-style-type:none;">
+                    <input name="key" {{if eq $key $.currentKey}} checked {{end}} type="radio" value="{{$key}}" />&nbsp;{{$key}}&nbsp;count({{$len}})
+                    {{if regular "_recover_lock$" $key}}
+                    <a href="/RedisInfo/MessageList/del" onclick="return confirm('确定删除消息恢复LOCK?');">删除</a>&nbsp;
+                    {{end}}
+                </li>
+                {{end}}
+
+                <table class="table table-striped table-layout" id="dataTable">
+                    <thead>
+                    <tr>
+                        <th>订阅ID</th>
+                        <th>订阅者</th>
+                        <th>消息分类</th>
+                        <th>接收消息的地址</th>
+                        <th>状态</th>
+                        <th>超时时间</th>
+                        <th>创建时间</th>
+                        <th>操作</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {{range $_,$value :=.listFailure}}
+                    <td>{{$value}}</td>
+                    {{end}}
+
+                    </tbody>
+                </table>
+
+            </div><!-- table-responsive -->
+
+        </div><!-- panel-body -->
+    </div><!-- panel -->
+
+</div><!-- contentpanel -->
+
+
+
+{{template "footer.tmpl" .}}

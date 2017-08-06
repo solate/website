@@ -1,0 +1,12 @@
+{{if .alert}}
+    {{if .alert.Msg}}
+    <div class="pannel-heading">
+        <div {{if .alert.Flag}} class="alert alert-success" {{else}} class="alert alert-danger" {{end}} >
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+            {{range $_,$msg :=.alert.Msg}}
+            <p><strong>{{$msg}}</strong></p>
+            {{end}}
+        </div>
+    </div>
+    {{end}}
+{{end}}

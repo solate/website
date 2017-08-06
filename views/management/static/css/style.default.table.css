@@ -1,0 +1,7 @@
+.table-responsive .table-layout { table-layout: inherit }
+.table-responsive .table-layout .table-word-break { word-wrap: break-word;word-break: break-all }
+.table-responsive .table-layout .table-min-width { min-width: 65px;}
+.table-responsive .table-layout .table-lg-min-width { min-width: 80px;}
+.table-responsive .table-layout .table-sm-min-width { min-width: 50px;}
+.table-responsive .table-layout .table-operate { min-width: 53px;}
+.table-responsive .table-layout .table-width { min-width: 90px; max-width: 100px; word-wrap: break-word;word-break: break-all}

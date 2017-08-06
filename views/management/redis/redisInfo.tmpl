@@ -1,0 +1,20 @@
+{{ $m := map }}
+{{ template "header.tmpl" addToMap "ctx" . $m }}
+
+
+<div class="pageheader">
+    <h2><i class="fa fa-table"></i> Redis信息统计 </h2>
+</div>
+
+<div class="contentpanel">
+    <div class="panel panel-default">
+        {{template "alert.tmpl" .}}
+        <div class="panel-body">
+            <pre>{{.data}}</pre>
+        </div>
+    </div><!-- panel -->
+
+</div><!-- contentpanel -->
+
+
+{{template "footer.tmpl" .}}
