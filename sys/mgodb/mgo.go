@@ -14,7 +14,7 @@ import (
 var globalMgoSession *mgo.Session
 
 
-var MongoDBHosts []string = []string{"127.0.0.1:27017"}
+var MongoDBHosts = []string{"127.0.0.1:27017"}
 
 func init()  {
 	//如果有配置就用配置文件中的

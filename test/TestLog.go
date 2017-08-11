@@ -1,45 +1,43 @@
-package main
+package test
 
 import (
+	"github.com/solate/website/sys/mgodb"
+	"github.com/Sirupsen/logrus"
+	"gopkg.in/mgo.v2"
 	"os"
-	log "github.com/sirupsen/logrus"
+	"github.com/solate/website/sys/config"
+	"github.com/solate/website/sys/logs"
 )
-
 func init() {
-	// Log as JSON instead of the default ASCII formatter.
-	log.SetFormatter(&log.JSONFormatter{})
+	//初始化相关服务器的连接
+	if err := config.LoadConfig(); err != nil {
+		logrus.Error(err)
+		os.Exit(1)
+	}
 
-	// Output to stdout instead of the default stderr
-	// Can be any io.Writer, see below for File example
-	log.SetOutput(os.Stdout)
+	//日志初始化
+	if err := logs.Init(); err != nil {
+		logrus.Error(err)
+		os.Exit(1)
+	}
 
-	// Only log the warning severity or above.
-	log.SetLevel(log.WarnLevel)
+	//初始化mgodb
+	if err := mgodb.InitMgo(); err != nil {
+		logrus.Error(err)
+		os.Exit(1)
+	}
+
 }
 
 func main() {
-	log.WithFields(log.Fields{
-		"animal": "walrus",
-		"size":   10,
-	}).Info("A group of walrus emerges from the ocean")
+	var value =  map[string]string{
+		"test":"测试一下",
+		"hhh":"nnnnnn",
+	}
 
-	log.WithFields(log.Fields{
-		"omg":    true,
-		"number": 122,
-	}).Warn("The group's number increased tremendously!")
-
-	log.WithFields(log.Fields{
-		"omg":    true,
-		"number": 100,
-	}).Fatal("The ice breaks!")
-
-	// A common pattern is to re-use fields between logging statements by re-using
-	// the logrus.Entry returned from WithFields()
-	contextLogger := log.WithFields(log.Fields{
-		"common": "this is a common field",
-		"other": "I also should be logged always",
+	dberr := mgodb.Exec(func(mgosess *mgo.Session) error {
+		return mgosess.DB("test").C("user_tasks").Insert(value)
 	})
 
-	contextLogger.Info("I'll be logged with common and other field")
-	contextLogger.Info("Me too")
+	logrus.Debug(dberr)
 }

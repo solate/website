@@ -29,13 +29,16 @@ func init() {
 		logrus.Error(err)
 		os.Exit(1)
 	}
-	
+
 }
 
 func main() {
 
 
 	e := echo.New()
+
+	//开发模式
+	e.Debug = true
 
 	//加载静态文件
 	e.Use(middleware.Static("./views/management"))
@@ -61,5 +64,5 @@ func main() {
 	//logrus.Debug(dberr)
 
 
-	
+
 }
