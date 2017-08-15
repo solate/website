@@ -65,23 +65,13 @@ func main() {
 	e.GET("/Stencil/delete", controllers.NavigationBarShow)
 
 
+	e.GET("/Bottom/show/:page/step/:step", controllers.StencilShow)
+	e.GET("/Bottom/add", controllers.NavigationBarShow)
+	e.GET("/Bottom/update", controllers.NavigationBarShow)
+	e.GET("/Bottom/delete", controllers.NavigationBarShow)
+
 
 
 	e.Start("127.0.0.1:9999")
-
-
-
-	//var value =  map[string]string{
-	//	"test":"测试一下",
-	//	"hhh":"nnnnnn",
-	//}
-	//
-	//dberr := mgodb.Exec(func(mgosess *mgo.Session) error {
-	//	return mgosess.DB("test").C("user_tasks").Insert(value)
-	//})
-	//
-	//logrus.Debug(dberr)
-
-
 
 }

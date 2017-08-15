@@ -1,5 +1,3 @@
-
-
 <link href="/static/css/style.default.css" rel="stylesheet">
 
 <div class="pageheader">
@@ -38,12 +36,18 @@
                     <div class="dataTables_length">
                         <label>每页</label>
                         <label>
-                            <form id="perPage" class="form-horizontal form-bordered" action="" method="get" >
-                                <select id="perPageSelect" name="perPageNums" onchange="document.getElementById('perPage').submit();" >
-                                    <option value="10" {{if eq .paginator.PerPageNums 10}}selected="true"{{end}}>10</option>
-                                    <option value="25" {{if eq .paginator.PerPageNums 25}}selected="true"{{end}}>25</option>
-                                    <option value="50" {{if eq .paginator.PerPageNums 50}}selected="true"{{end}}>50</option>
-                                    <option value="100" {{if eq .paginator.PerPageNums 100}}selected="true"{{end}}>100</option>
+                            <form id="perPage" class="form-horizontal form-bordered" action="" method="get">
+                                <select id="perPageSelect" name="perPageNums"
+                                        onchange="document.getElementById('perPage').submit();">
+                                    <option value="10" {{if eq .paginator.PerPageNums 10}}selected="true" {{end}}>10
+                                    </option>
+                                    <option value="25" {{if eq .paginator.PerPageNums 25}}selected="true" {{end}}>25
+                                    </option>
+                                    <option value="50" {{if eq .paginator.PerPageNums 50}}selected="true" {{end}}>50
+                                    </option>
+                                    <option value="100" {{if eq .paginator.PerPageNums 100}}selected="true" {{end}}>
+                                        100
+                                    </option>
                                 </select>
                             </form>
                         </label>
@@ -51,18 +55,19 @@
                     </div>
 
                     <!--<script>-->
-                        <!--jQuery(document).ready(function() {-->
-                            <!--// Select2-->
-                            <!--jQuery("#perPageSelect").select2({-->
-                                <!--width: '100%',-->
-                                <!--minimumResultsForSearch: -1-->
-                            <!--});-->
-                        <!--});-->
+                    <!--jQuery(document).ready(function() {-->
+                    <!--// Select2-->
+                    <!--jQuery("#perPageSelect").select2({-->
+                    <!--width: '100%',-->
+                    <!--minimumResultsForSearch: -1-->
+                    <!--});-->
+                    <!--});-->
 
                     <!--</script>-->
                 </div>
                 <div>
-                    <div style="text-align:center;padding-left: 100px;margin-top: -24px;float: right;" class="pagination">
+                    <div style="text-align:center;padding-left: 100px;margin-top: -24px;float: right;"
+                         class="pagination">
                         {{if .paginator}}
                         <ul class="pagination pagination-sm">
                             {{if .paginator.HasPrev}}
@@ -102,14 +107,14 @@
                             {{end}}
                             <li class="disabled">
                                 <a>
-                                    共{{.paginator.Nums }}条数据 每页{{.paginator.PerPageNums}}条 当前{{.paginator.Page}}/{{.paginator.PageNums}}页
+                                    共{{.paginator.Nums }}条数据 每页{{.paginator.PerPageNums}}条
+                                    当前{{.paginator.Page}}/{{.paginator.PageNums}}页
                                 </a>
                             </li>
                         </ul>
                         {{end}}
                     </div>
                 </div>
-
 
 
                 <table class="table table-striped table-layout" id="dataTable">
@@ -132,8 +137,9 @@
                         <td class="table-word-break">{{$message.Comment}}</td>
                         <td>{{timeFormat $message.CreateTime}}</td>
                         <td class="table-action table-operate">
-                            <a href="/Event/MsgList/update?id={{$message.ClassId}}" ><i class="fa fa-pencil"></i></a>
-                            <a href="/Event/MsgList/delete?id={{$message.ClassId}}" class="delete-row delete-btn"><i class="fa fa-trash-o"></i></a>
+                            <a href="/Event/MsgList/update?id={{$message.ClassId}}"><i class="fa fa-pencil"></i></a>
+                            <a href="/Event/MsgList/delete?id={{$message.ClassId}}" class="delete-row delete-btn"><i
+                                    class="fa fa-trash-o"></i></a>
                         </td>
                     </tr>
                     {{end}}
@@ -148,27 +154,103 @@
 
 
 <script>
+
+
+    //每页的条数发生改变时  重新计算分页条数
+    function changeStep(onlyChangeStep) {
+        var pagelabelDiv = $("#pageLabelDiv ul");
+        pagelabelDiv.empty();
+        var stepinput = document.getElementById("stepInput")
+        step = parseInt(stepinput.options[stepinput.selectedIndex].value);
+        var pageNum = Math.ceil(totalCount / step);
+        if (currentPage <= 1) {
+            pagelabelDiv.append('<li class="prev disabled"><a href="#">← Previous</a></li>')
+        } else {
+            pagelabelDiv.append('<li class="prev" onclick="getList(' + (currentPage - 1) + ',' + step + ')" ><a href="#">← Previous</a></li>')
+        }
+        if (pageNum > 6) {
+            for (var i = 1; i <= pageNum; i++) {
+                if ((i) == currentPage) {
+                    pagelabelDiv.append('<li class="active"><a>' + (i) + '</a></li>')
+                } else if ((i <= 2)) {
+                    pagelabelDiv.append('<li onclick="getList(' + i + ',' + step + ')"><a  href="#">' + (i) + '</a></li>')
+                } else if ((i >= currentPage - 1 && (i <= currentPage + 1)) || (i > pageNum - 2)) {
+                    pagelabelDiv.append('<li onclick="getList(' + i + ',' + step + ')"><a  href="#">' + (i) + '</a></li>')
+                }
+            }
+
+        } else {
+            for (var i = 1; i <= pageNum; i++) {
+                if ((i) == currentPage) {
+                    pagelabelDiv.append('<li class="active"><a>' + (i) + '</a></li>')
+                } else {
+                    pagelabelDiv.append('<li onclick="getList(' + i + ',' + step + ')"><a  href="#">' + (i) + '</a></li>')
+                }
+            }
+        }
+        if (currentPage >= pageNum) {
+            pagelabelDiv.append('<li class="next disabled"><a href="#">Next → </a></li>')
+        } else {
+            pagelabelDiv.append('<li class="next" onclick="getList(' + (currentPage + 1) + ',' + step + ')" ><a href="#">Next → </a></li>')
+        }
+        if (onlyChangeStep == false) {
+            getList(currentPage, step);
+        }
+    }
+
+
     var totalCount = 0
     var currentPage = 1
-    var step = 10
+    var currentPageSize = 10
     var tablebody
     var currentListData
     var adddata
     var host
 
-
-    //从API获取数据列表
-    function getList(page, tempstep) {
-        currentPage = page;
-        step = tempstep
-        searchLog();
-    }
     //页面载入后先获取默认条数的数据
     window.onload = function () {
         host = "http://" + window.location.host
         getList(currentPage, step);
     };
 
+    //从API获取数据列表
+    function getList(page, tempstep) {
+        currentPage = page;
+        step = tempstep
+        searchList();
+    }
+
+
+    //----------------------------上面为相同部分---------------------------------------------
+
+
+    //点击提交按钮
+    function searchList() {
+        var currentdata = new Object();
+        currentdata.page = currentPage;
+        currentdata.pageSize = currentPageSize;
+        $.post(host + "/Stencil/show/" + currentPage + "/step/" + step, JSON.stringify(currentdata), listToSuccess, "json");
+    }
+    //从数据库中获取列表成功
+    function listToSuccess(response, status, xhr) {
+        if (status == "success" && response.reusltCode == "200") {
+            currentListData = response.reuslt;
+            totalCount = response.totalCount;
+            clearDataTable();
+            changeStep(true);
+            fillTable();
+            parent.setMainContentHeight(currentListData.length, 52);
+        } else {
+            alert(response);
+        }
+
+    }
+
+    //清空数据表格
+    function clearDataTable() {
+        tablebody = $("#maintablebody");
+        tablebody.empty();
+    }
     //采用本地数组中的数据填充表格
     function fillTable() {
         adddata = "";
@@ -190,69 +272,5 @@
         tablebody.append(adddata);
     }
 
-    //清空数据表格
-    function clearDataTable() {
-        tablebody = $("#maintablebody");
-        tablebody.empty();
-    }
-    //从数据库中获取列表成功
-    function listToSuccess(response, status, xhr) {
-        if (status == "success" && response.reusltCode == "200") {
-            currentListData = response.reusltDetail;
-            totalCount = response.totalCount;
-            clearDataTable();
-            changeStep(true);
-            fillTable();
-            parent.setMainContentHeight(currentListData.length, 52);
-        } else {
-            alert(response);
-        }
 
-    }
-    //点击提交按钮
-    function searchLog() {
-        $.post(host + "/Stencil/show/" + currentPage + "/step/" + step, JSON.stringify(currentdata), listToSuccess, "json");
-    }
-
-    //每页的条数发生改变时  重新计算分页条数
-    function changeStep(onlyChangeStep) {
-        var pagelabelDiv = $("#pageLabelDiv ul");
-        pagelabelDiv.empty();
-        var stepinput = document.getElementById("stepInput")
-        step = parseInt(stepinput.options[stepinput.selectedIndex].value);
-        var pageNum = Math.ceil(totalCount / step);
-        if (currentPage <= 1) {
-            pagelabelDiv.append('<li class="prev disabled"><a href="#">← Previous</a></li>')
-        } else {
-            pagelabelDiv.append('<li class="prev" onclick="getList(' + (currentPage - 1) + ',' + step + ')" ><a href="#">← Previous</a></li>')
-        }
-        if (pageNum > 6) {
-            for (var i = 1; i <= pageNum; i++) {
-                if ((i) == currentPage) {
-                    pagelabelDiv.append('<li class="active"><a   >' + (i) + '</a></li>')
-                } else if ((i <= 2)) {
-                    pagelabelDiv.append('<li onclick="getList(' + i + ',' + step + ')"><a  href="#">' + (i) + '</a></li>')
-                } else if ((i >= currentPage - 1 && (i <= currentPage + 1)) || (i > pageNum - 2)) {
-                    pagelabelDiv.append('<li onclick="getList(' + i + ',' + step + ')"><a  href="#">' + (i) + '</a></li>')
-                }
-            }
-
-        } else {
-            for (var i = 1; i <= pageNum; i++) {
-                if ((i) == currentPage) {
-                    pagelabelDiv.append('<li class="active"><a   >' + (i) + '</a></li>')
-                } else {
-                    pagelabelDiv.append('<li onclick="getList(' + i + ',' + step + ')"><a  href="#">' + (i) + '</a></li>')
-                }
-            }
-        }
-        if (currentPage >= pageNum) {
-            pagelabelDiv.append('<li class="next disabled"><a href="#">Next → </a></li>')
-        } else {
-            pagelabelDiv.append('<li class="next" onclick="getList(' + (currentPage + 1) + ',' + step + ')" ><a href="#">Next → </a></li>')
-        }
-        if (onlyChangeStep == false) {
-            getList(currentPage, step);
-        }
-    }
 </script>

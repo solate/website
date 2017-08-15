@@ -1,0 +1,1 @@
+time="2017-08-15T12:08:59+08:00" level=error msg="not authorized on test to execute command { insert: \"stencil\", documents: [ { image: \"/images/123.jpg\", title: \"测试1\", content: \"content1\", price: \"￥ 199\" } ], writeConcern: { getLastError: 1 }, ordered: true }"
