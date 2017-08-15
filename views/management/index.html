@@ -23,7 +23,7 @@
         }
     </style>
 </head>
-<body style="background: #1d2939;">
+<body style="background: #1d2939;" scroll="no" onresize="onBodyResize()">
 
 <section>
     <div class="leftpanel">
@@ -37,14 +37,15 @@
             <h5 class="sidebartitle"></h5>
             <ul class="nav nav-pills nav-stacked nav-bracket">
                 <li class="nav-parent">
-                    <a href=""><i class="fa fa-envelope"></i> <span>消息分类管理</span></a>
+                    <a href=""><i class="fa fa-home"></i> <span>首页管理</span></a>
                     <ul class="children">
-                        <li><a href="/Event/MsgList/add"><i class="fa fa-caret-right"></i> 添加消息类型</a></li>
-                        <li><a href="/Event/MsgList/show"><i class="fa fa-caret-right"></i> 消息类型列表</a></li>
+                        <li><a href="#" onclick="openwithClick('/NavigationBar/show')"><i class="fa fa-caret-right"></i> 导航栏管理</a></li>
+                        <li><a href="#" onclick="openwithClick('/Carousel/show')"><i class="fa fa-caret-right"></i> 轮播图管理</a></li>
+                        <li><a href="#" onclick="openwithClick('/Stencil/show')"><i class="fa fa-caret-right"></i> 项目块管理</a></li>
                     </ul>
                 </li>
                 <li class="nav-parent">
-                    <a href=""><i class="fa fa-users"></i> <span>账号管理</span></a>
+                    <a href=""><i class="fa fa-edit"></i> <span>详情页管理</span></a>
                     <ul class="children">
                         <li><a href="/Event/Subscriber/add"><i class="fa fa-caret-right"></i> 添加账号</a></li>
                         <li><a href="/Event/Subscriber/show"><i class="fa fa-caret-right"></i> 账号列表</a></li>
@@ -52,20 +53,10 @@
                     </ul>
                 </li>
                 <li class="nav-parent">
-                    <a href=""><i class="fa fa-bell"></i> <span>订阅管理</span></a>
+                    <a href=""><i class="fa fa-bell"></i> <span>其他管理</span></a>
                     <ul class="children">
                         <li><a href="/Event/Subscription/add"><i class="fa fa-caret-right"></i> 添加订阅</a></li>
                         <li><a href="/Event/Subscription/show"><i class="fa fa-caret-right"></i> 订阅列表</a></li>
-                    </ul>
-                </li>
-                <li class="nav-parent">
-                    <a href=""><i class="fa fa-gears"></i> <span>系统信息</span></a>
-                    <ul class="children">
-                        <li><a href="/Nsq/Stats"><i class="fa fa-caret-right"></i> 消息队列状态统计 </a></li>
-                        <li><a href="/Event/LogList"><i class="fa fa-caret-right"></i> 消息推送失败日志</a></li>
-                        <li><a href="/Event/LogDownload"><i class="fa fa-caret-right"></i> 系统日志下载</a></li>
-                        <li><a href="/RedisInfo/Stats"><i class="fa fa-caret-right"></i> Redis 信息统计</a></li>
-                        <li><a href="/RedisInfo/MessageList"><i class="fa fa-caret-right"></i> 消息队列Redis使用情况</a></li>
                     </ul>
                 </li>
                 <li class="nav-parent">
@@ -109,7 +100,7 @@
         </div><!-- headerbar -->
 
         <div id="test" class="test">
-            <iframe src="/dashbord.html" frameborder="no" name="maincontent" id="maincontent" scrolling="yes" style="height: 100%; width: 100%"  ></iframe>
+            <iframe src="/stencil.html" frameborder="no" name="maincontent" id="maincontent" scrolling="yes" ></iframe>
         </div>
 
     </div><!-- mainpanel -->
@@ -175,6 +166,35 @@
     };
 
     $('#test').scrollUnique();
+
+
+    window.onload = function checkSession() {
+        host = "http://" + window.location.host;
+        iframesetheight() ;
+    }
+    function openwithClick(url){
+        document.getElementById("maincontent").src = url;
+    }
+
+    //页面发生变化的时候时候调用方法
+    function onBodyResize(){
+        iframesetheight() ;
+        document.getElementById("maincontent").contentWindow.onBodyResize();
+    }
+    //调整iframe大小
+    function iframesetheight() {
+        var ifm = document.getElementById("maincontent");
+        var subWeb = document.frames ? document.frames["maincontent"].document : ifm.contentDocument;
+        if(ifm != null && subWeb != null) {
+            ifm.height = subWeb.documentElement.clientHeight  ;
+        }
+        if (window.innerWidth >800){
+            ifm.width = window.innerWidth - 241;
+        }else{
+            ifm.width = window.innerWidth ;
+        }
+
+    }
 
 </script>
 

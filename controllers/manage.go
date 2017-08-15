@@ -12,4 +12,3 @@ func ManageIndex(c echo.Context) error {
 	return err
 }
 
-

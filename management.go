@@ -46,6 +46,25 @@ func main() {
 
 	//路由
 	e.GET("/", controllers.ManageIndex)
+	//首页菜单
+	e.GET("/NavigationBar/show", controllers.NavigationBarShow)
+	e.GET("/NavigationBar/add", controllers.NavigationBarAdd)
+	e.GET("/NavigationBar/update", controllers.NavigationBarUpate)
+	e.GET("/NavigationBar/delete", controllers.NavigationBarDelete)
+
+	//轮播图
+	e.GET("/Carousel/show", controllers.NavigationBarShow)
+	e.GET("/Carousel/add", controllers.NavigationBarShow)
+	e.GET("/Carousel/update", controllers.NavigationBarShow)
+	e.GET("/Carousel/delete", controllers.NavigationBarShow)
+
+	//模版管理
+	e.GET("/Stencil/show/:page/step/:step", controllers.StencilShow)
+	e.GET("/Stencil/add", controllers.NavigationBarShow)
+	e.GET("/Stencil/update", controllers.NavigationBarShow)
+	e.GET("/Stencil/delete", controllers.NavigationBarShow)
+
+
 
 
 	e.Start("127.0.0.1:9999")
