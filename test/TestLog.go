@@ -36,7 +36,7 @@ func main() {
 	}
 
 	dberr := mgodb.Exec(func(mgosess *mgo.Session) error {
-		return mgosess.DB("test").C("user_tasks").Insert(value)
+		return mgosess.DB("test").C("stencil").Insert(value)
 	})
 
 	logrus.Debug(dberr)

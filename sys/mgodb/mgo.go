@@ -28,6 +28,10 @@ func InitMgo() (err error)  {
 		Addrs: MongoDBHosts,
 		Timeout: time.Second * 3,
 		PoolLimit: 128,
+
+		//TODO 正式环境可以不设置
+		Username:  "root",
+		Password:  "iamapassword",
 	}
 	globalMgoSession, err = mgo.DialWithInfo(dialInfo)
 	if err != nil {

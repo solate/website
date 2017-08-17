@@ -7,23 +7,20 @@ import (
 	"gopkg.in/mgo.v2/bson"
 )
 
-
 type Stencil struct {
-	Image string `json:"image"` //模块图片
-	Title string `json:"title"` //标题
+	Image   string `json:"image"`   //模块图片
+	Title   string `json:"title"`   //标题
 	Content string `json:"content"` //内容
-	Price string `json:"price"` //内容
+	Price   string `json:"price"`   //内容
+	Time    int32  `json:"time"`    //创建时间
 }
-
-
-
 
 func GetAllStencil(page, pageSize int) (stencils []Stencil, err error) {
 	query := bson.M{
 
 	}
 	err = mgodb.Exec(func(mgosess *mgo.Session) error {
-		return mgosess.DB(DB).C(DBStencil).Find(query).Skip(pageSize*page).Limit(pageSize).All(&stencils)
+		return mgosess.DB(DB).C(DBStencil).Find(query).Skip(pageSize * (page - 1)).Limit(pageSize).All(&stencils)
 	})
 	return
 }
@@ -39,8 +36,8 @@ func GetStencilCount() (allCount int, err error) {
 	return
 }
 
-func StencilById()  {
-	var value =  Stencil{
+func StencilById() {
+	var value = Stencil{
 
 	}
 
