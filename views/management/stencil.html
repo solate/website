@@ -7,9 +7,26 @@
 
 <div class="contentpanel">
     <div class="panel panel-default">
+
+        <div class="panel-body">
+            <h3 class="panel-title">查询</h3>
+            <form class="form-horizontal form-bordered" action="" method="get">
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">标题: <span class="asterisk"></span></label>
+                    <div class="col-sm-5">
+                        <input type="text" name="class_key" class="form-control" value="{{.query.class_key}}" placeholder="请填写标题..."/>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-5 col-sm-offset-3">
+                        <button class="btn btn-primary">提交</button>
+                    </div>
+                </div>
+            </form>
+
+        </div>
+
         <div class="panel-footer">
-
-
             <div class="table-responsive">
                 <table class="table table-striped table-layout" id="dataTable">
                     <thead>
@@ -26,7 +43,7 @@
                     <tbody id="maintablebody">
                     </tbody>
 
-                    <footer>
+
                         <div class="dataTables_length">
                             <label>每页</label>
                             <label>
@@ -43,10 +60,80 @@
                             <ul class="pagination pagination-sm">
                             </ul>
                         </div>
-                    </footer>
+                        <div class="form-group">
+                            <div class="col-md-10"></div>
+                            <div class="col-md-2" align="right"><button data-toggle="modal" href="#myModal" class="btn btn-success  btn-sm" onclick="currentId = 0;clearForm();">新增</button></div>
+                        </div>
+
 
                 </table>
             </div><!-- table-responsive -->
+
+
+
+
+            <!--	//-----------弹出创建的窗口------start------------>
+            <div class="modal fade" id="myModal" tabindex="-100" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                            <h4 class="modal-title" id="addAPIUserTitle">添加基础信息</h4>
+                        </div>
+
+                        <div class="modal-body row">
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label>所属平台</label>
+                                    <select id="basicSystem" name="basicSystem" class="form-control">
+                                        <option value="0">iphone</option>
+                                        <option value="1">android</option>
+                                        <option value="2">ipad</option>
+                                        <option value="3">android pad</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-body row">
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label>类型</label>
+                                    <select id="basicType" name="basicType" class="form-control">
+                                        <option value="appver">版本号</option>
+                                        <option value="bundleId">包名</option>
+                                        <option value="system">系统</option>
+                                        <option value="osversion">系统版本号</option>
+                                        <option value="brand">手机厂商名</option>
+                                        <option value="model">手机型号</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-body row">
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label>类型值</label>
+                                    <input type="text" class="form-control" id="basicValue" />
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="modal-body row">
+                            <div class="col-md-5">
+
+                            </div>
+                            <div class="col-md-2">
+                                <button class="btn btn-success  btn-sm" onclick="saveNewitem()">保存</button>
+                            </div>
+                            <div class="col-md-5">
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--   //-----------弹出创建的窗口------end----------      -->
+
 
         </div><!-- panel-body -->
     </div><!-- panel -->
@@ -161,15 +248,82 @@
     function fillTable() {
         adddata = "";
         $.each(currentListData, function (index, item) {
-            adddata += ("<td class=\"table-min-width\">" + item.image + "</td>");
-            adddata += ("<td class=\"table-min-width\">" + item.title + "</td>");
-            adddata += ("<td class=\"table-min-width\">" + item.content + "</td>");
-            adddata += ("<td class=\"table-min-width\">" + item.price + "</td>");
-            adddata += ("<td class=\"table-min-width\">" + item.time + "</td>");
+            adddata += ("<tr name=" + index + ">");
+            adddata += ("<td class=\"\">" + item.image + "</td>");
+            adddata += ("<td class=\"\">" + item.title + "</td>");
+            adddata += ("<td class=\"\">" + item.content + "</td>");
+            adddata += ("<td class=\"\">" + item.price + "</td>");
+            adddata += ("<td class=\"\">" + item.time + "</td>");
+            adddata += ("<td class=\"table-action table-operate\"> " +
+                "<a data-toggle='modal' href='#myModal'   onclick='editItem(" + index + ")' ><i class=\"fa fa-pencil\"></i></a> " +
+                "<a data-toggle='modal' href='#setApiUserModal'  onclick='deleteItem(" + item.id  + ")' ><i class=\"fa fa-trash-o\"></i></a>" +
+                "</td>");
             adddata += "</tr>";
 
         });
         tablebody.append(adddata);
+    }
+
+
+    //点击编辑按钮的时候
+    function saveNewitem() {
+
+        var cType = document.getElementById("basicType").value;
+        currentType = cType;
+        var currentdata = new Object();
+        currentdata.id = currentId;
+        currentdata.system = document.getElementById("basicSystem").value;
+        currentdata.type = cType;
+        currentdata.value = document.getElementById("basicValue").value;
+        if (currentdata.system == "") {
+            document.getElementById("basicValue").focus();
+            alert("所属平台必须填写");
+            return;
+        }else {
+            currentdata.system = parseInt(document.getElementById("basicSystem").value,10)
+        }
+
+        if (currentdata.type == "") {
+            document.getElementById("basicType").focus();
+            alert("类型必须填写");
+            return;
+        }
+        if (currentdata.value == "") {
+            document.getElementById("basicValue").focus();
+            alert("类型的值必须填写");
+            return;
+        }
+
+        currentdata.page = currentPage;
+        currentdata.step = step;
+        $.ajaxSetup({
+            contentType: 'application/json'
+        });
+        $.post(host + "/add_basic_info", JSON.stringify(currentdata), returnSuccess, "json");
+
+    }
+    //保存成功
+    function returnSuccess(response, status, xhr) {
+        if(status == "success" && response.reusltCode == "200") {
+            getList(currentPage, step, currentType);
+            currentId = 0;
+            currentListData = response.reusltDetail;
+            $('#myModal').modal('hide');
+            alert("操作成功！");
+        } else {
+            alert(response);
+        }
+    }
+
+
+    //点击编辑按钮的时候
+    function editItem(i) {
+        currentTabIndex = i;
+        currentId = currentListData[i].id;
+        $("#basicSystem").val(currentListData[i].system);
+        $("#basicType").val(currentListData[i].type);
+//        document.getElementById("basicType").value = currentListData[i].type;
+        document.getElementById("basicValue").value = currentListData[i].value;
     }
 
 

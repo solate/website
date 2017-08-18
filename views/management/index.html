@@ -18,7 +18,7 @@
         }
         .test {
             width: 100%;
-            height: 500px;
+            height: 1000px;
             overflow-x : hidden;
         }
     </style>
@@ -78,8 +78,6 @@
         <div class="headerbar">
 
             <a class="menutoggle"><i class="fa fa-bars"></i></a>
-
-
 
             <!--<div class="header-right">-->
                 <!--<ul class="headermenu">-->
@@ -198,7 +196,7 @@
     }
 
     function setMainContentHeight(row,rowHeight){
-        var countheight = row*rowHeight+300;
+        var countheight = row*rowHeight+500;
         if (countheight < window.innerHeight){
             countheight = window.innerHeight-45;
         }
