@@ -1,4 +1,5 @@
 <link href="/static/css/style.default.css" rel="stylesheet">
+<link href="/static/css/select2.css" rel="stylesheet">
 
 <div class="pageheader">
     <h2><i class="fa fa-table"></i> 模版列表 </h2>
@@ -10,113 +11,6 @@
 
 
             <div class="table-responsive">
-                <div>
-                    <style>
-                        .dataTables_length {
-                            float: left;
-                            margin-bottom: 10px;
-                        }
-
-                        .dataTables_length::after {
-                            clear: both;
-                            display: block;
-                            content: '';
-                        }
-
-                        .dataTables_length label {
-                            position: relative;
-                            display: inline-block;
-                            margin-bottom: 0;
-                            font-weight: normal;
-                            vertical-align: middle;
-                            cursor: pointer;
-                        }
-                    </style>
-
-                    <div class="dataTables_length">
-                        <label>每页</label>
-                        <label>
-                            <form id="perPage" class="form-horizontal form-bordered" action="" method="get">
-                                <select id="perPageSelect" name="perPageNums"
-                                        onchange="document.getElementById('perPage').submit();">
-                                    <option value="10" {{if eq .paginator.PerPageNums 10}}selected="true" {{end}}>10
-                                    </option>
-                                    <option value="25" {{if eq .paginator.PerPageNums 25}}selected="true" {{end}}>25
-                                    </option>
-                                    <option value="50" {{if eq .paginator.PerPageNums 50}}selected="true" {{end}}>50
-                                    </option>
-                                    <option value="100" {{if eq .paginator.PerPageNums 100}}selected="true" {{end}}>
-                                        100
-                                    </option>
-                                </select>
-                            </form>
-                        </label>
-                        <label>行</label>
-                    </div>
-
-                    <!--<script>-->
-                    <!--jQuery(document).ready(function() {-->
-                    <!--// Select2-->
-                    <!--jQuery("#perPageSelect").select2({-->
-                    <!--width: '100%',-->
-                    <!--minimumResultsForSearch: -1-->
-                    <!--});-->
-                    <!--});-->
-
-                    <!--</script>-->
-                </div>
-                <div>
-                    <div style="text-align:center;padding-left: 100px;margin-top: -24px;float: right;"
-                         class="pagination">
-                        {{if .paginator}}
-                        <ul class="pagination pagination-sm">
-                            {{if .paginator.HasPrev}}
-                            <li>
-                                <a href="{{.paginator.PageLinkFirst}}">首页</a>
-                            </li>
-                            <li>
-                                <a href="{{.paginator.PageLinkPrev}}">上一页</a>
-                            </li>
-                            {{else}}
-                            <li class="disabled">
-                                <a>首页</a>
-                            </li>
-                            <li class="disabled">
-                                <a>上一页</a>
-                            </li>
-                            {{end}}
-                            {{range $index, $page := .paginator.Pages}}
-                            <li {{if $.paginator.IsActive .}} class="active" {{end}}>
-                                <a href="{{$.paginator.PageLink $page}}">{{$page}}</a>
-                            </li>
-                            {{end}}
-                            {{if .paginator.HasNext}}
-                            <li>
-                                <a href="{{.paginator.PageLinkNext}}">下一页</a>
-                            </li>
-                            <li>
-                                <a href="{{.paginator.PageLinkLast}}">末页</a>
-                            </li>
-                            {{else}}
-                            <li class="disabled">
-                                <a>下一页</a>
-                            </li>
-                            <li class="disabled">
-                                <a>末页</a>
-                            </li>
-                            {{end}}
-                            <li class="disabled">
-                                <a>
-                                    共{{.paginator.Nums }}条数据 每页{{.paginator.PerPageNums}}条
-                                    当前{{.paginator.Page}}/{{.paginator.PageNums}}页
-                                </a>
-                            </li>
-                        </ul>
-                        {{end}}
-                    </div>
-                </div>
-
-
                 <table class="table table-striped table-layout" id="dataTable">
                     <thead>
                     <tr>
@@ -131,6 +25,26 @@
 
                     <tbody id="maintablebody">
                     </tbody>
+
+                    <footer>
+                        <div class="dataTables_length">
+                            <label>每页</label>
+                            <label>
+                                <select id="stepInput" name="perPageNums" onChange="currentPatchPage = 1;changeStep(false)">
+                                    <option value="10" selected="selected">10</option>
+                                    <option value="25">25</option>
+                                    <option value="50">50</option>
+                                    <option value="100">100</option>
+                                </select>
+                            </label>
+                            <label>行</label>
+                        </div>
+                        <div id="pageLabelDiv" class="dataTables_paginate paging_bootstrap pagination">
+                            <ul class="pagination pagination-sm">
+                            </ul>
+                        </div>
+                    </footer>
+
                 </table>
             </div><!-- table-responsive -->
 
@@ -140,10 +54,9 @@
 </div><!-- contentpanel -->
 
 <script src="/static/js/jquery-1.11.1.min.js"></script>
+<script src="/static/js/select2.min.js"></script>
 
 <script>
-
-    console.log("123123")
     //每页的条数发生改变时  重新计算分页条数
     function changeStep(onlyChangeStep) {
         var pagelabelDiv = $("#pageLabelDiv ul");
@@ -152,9 +65,9 @@
         step = parseInt(stepinput.options[stepinput.selectedIndex].value);
         var pageNum = Math.ceil(totalCount / step);
         if (currentPage <= 1) {
-            pagelabelDiv.append('<li class="prev disabled"><a href="#">← Previous</a></li>')
+            pagelabelDiv.append('<li class="disabled"><a href="#">上一页</a></li>')
         } else {
-            pagelabelDiv.append('<li class="prev" onclick="getList(' + (currentPage - 1) + ',' + step + ')" ><a href="#">← Previous</a></li>')
+            pagelabelDiv.append('<li class="" onclick="getList(' + (currentPage - 1) + ',' + step + ')" ><a href="#">上一页</a></li>')
         }
         if (pageNum > 6) {
             for (var i = 1; i <= pageNum; i++) {
@@ -177,14 +90,21 @@
             }
         }
         if (currentPage >= pageNum) {
-            pagelabelDiv.append('<li class="next disabled"><a href="#">Next → </a></li>')
+            pagelabelDiv.append('<li class="disabled"><a href="#">下一页</a></li>')
         } else {
-            pagelabelDiv.append('<li class="next" onclick="getList(' + (currentPage + 1) + ',' + step + ')" ><a href="#">Next → </a></li>')
+            pagelabelDiv.append('<li class="" onclick="getList(' + (currentPage + 1) + ',' + step + ')" ><a href="#">下一页</a></li>')
         }
         if (onlyChangeStep == false) {
             getList(currentPage, step);
         }
     }
+    jQuery(document).ready(function() {
+        // Select2
+        jQuery("#stepInput").select2({
+            width: '100%',
+            minimumResultsForSearch: -1
+        });
+    });
 
 
     var totalCount = 0
@@ -208,7 +128,6 @@
         searchList();
     }
 
-
     //----------------------------上面为相同部分---------------------------------------------
 
 
@@ -216,13 +135,14 @@
     function searchList() {
         $.get(host + "/Stencil/show/" + currentPage + "/step/" + step, null, listToSuccess, "json");
     }
+
     //从数据库中获取列表成功
     function listToSuccess(response, status, xhr) {
         if (status == "success" && response.reusltCode == "200") {
             currentListData = response.reusltDetail.dataList;
             totalCount = response.totalCount;
             clearDataTable();
-//            changeStep(true);
+            changeStep(true);
             fillTable();
             parent.setMainContentHeight(currentListData.length, 52);
         } else {
@@ -236,15 +156,16 @@
         tablebody = $("#maintablebody");
         tablebody.empty();
     }
+
     //采用本地数组中的数据填充表格
     function fillTable() {
         adddata = "";
         $.each(currentListData, function (index, item) {
-            adddata += ("<td class=\"table-min-width\">"+item.image+"</td>");
-            adddata += ("<td class=\"table-min-width\">"+item.title+"</td>");
-            adddata += ("<td class=\"table-min-width\">"+item.content+"</td>");
-            adddata += ("<td class=\"table-min-width\">"+item.price+"</td>");
-            adddata += ("<td class=\"table-min-width\">"+item.time+"</td>");
+            adddata += ("<td class=\"table-min-width\">" + item.image + "</td>");
+            adddata += ("<td class=\"table-min-width\">" + item.title + "</td>");
+            adddata += ("<td class=\"table-min-width\">" + item.content + "</td>");
+            adddata += ("<td class=\"table-min-width\">" + item.price + "</td>");
+            adddata += ("<td class=\"table-min-width\">" + item.time + "</td>");
             adddata += "</tr>";
 
         });
