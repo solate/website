@@ -47,7 +47,7 @@ func main() {
 	//路由
 	e.GET("/", controllers.ManageIndex)
 	//首页菜单
-	e.GET("/NavigationBar/show", controllers.NavigationBarShow)
+	e.GET("/NavigationBar/show/:page/step/:step", controllers.NavigationBarShow)
 	e.GET("/NavigationBar/add", controllers.NavigationBarAdd)
 	e.GET("/NavigationBar/update", controllers.NavigationBarUpate)
 	e.GET("/NavigationBar/delete", controllers.NavigationBarDelete)
