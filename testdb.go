@@ -48,27 +48,37 @@ func main() {
 		fmt.Println(err, "-------1---------")
 	}
 
-	var value =  models.Stencil{
-		Image:"/images/123.jpg",
-		Title:"测试1",
-		Content:"content1",
-		Price:"￥ 199",
+	//var value =  models.Stencil{
+	//	Image:"/images/123.jpg",
+	//	Title:"测试1",
+	//	Content:"content1",
+	//	Price:"￥ 199",
+	//
+	//}
+	//
+	//err = Exec(func(mgosess *mgo.Session) error {
+	//	return mgosess.DB(models.DB).C(models.DBStencil).Insert(value)
+	//})
+	//
+	//logrus.Error(err)
+	//
+	//var stencils []models.Stencil
+	//err = Exec(func(mgosess *mgo.Session) error {
+	//	return mgosess.DB(models.DB).C(models.DBStencil).Find(bson.M{}).Skip(0).Limit(10).All(&stencils)
+	//})
+	//
+	//fmt.Println(stencils, err)
+	//
+	//fmt.Println("============1111===========")
 
-	}
 
+	var ids []models.Ids
 	err = Exec(func(mgosess *mgo.Session) error {
-		return mgosess.DB(models.DB).C(models.DBStencil).Insert(value)
+		return mgosess.DB(models.DB).C(models.DBIds).Find(bson.M{"name":models.DBStencil}).All(&ids)
+
+
 	})
 
-	logrus.Error(err)
-
-	var stencils []models.Stencil
-	err = Exec(func(mgosess *mgo.Session) error {
-		return mgosess.DB(models.DB).C(models.DBStencil).Find(bson.M{}).Skip(0).Limit(10).All(&stencils)
-	})
-
-	fmt.Println(stencils, err)
-
-
+	fmt.Println(ids)
 
 }

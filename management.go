@@ -48,26 +48,23 @@ func main() {
 	e.GET("/", controllers.ManageIndex)
 	//首页菜单
 	e.GET("/NavigationBar/show/:page/step/:step", controllers.NavigationBarShow)
-	e.GET("/NavigationBar/add", controllers.NavigationBarAdd)
-	e.GET("/NavigationBar/update", controllers.NavigationBarUpate)
+	e.POST("/NavigationBar/add", controllers.NavigationBarAdd)
+	e.POST("/NavigationBar/update", controllers.NavigationBarUpate)
 	e.GET("/NavigationBar/delete", controllers.NavigationBarDelete)
 
 	//轮播图
 	e.GET("/Carousel/show", controllers.NavigationBarShow)
-	e.GET("/Carousel/add", controllers.NavigationBarShow)
-	e.GET("/Carousel/update", controllers.NavigationBarShow)
+	e.POST("/Carousel/add", controllers.NavigationBarShow)
 	e.GET("/Carousel/delete", controllers.NavigationBarShow)
 
 	//模版管理
 	e.GET("/Stencil/show/:page/step/:step", controllers.StencilShow)
-	e.GET("/Stencil/add", controllers.NavigationBarShow)
-	e.GET("/Stencil/update", controllers.NavigationBarShow)
-	e.GET("/Stencil/delete", controllers.NavigationBarShow)
+	e.POST("/Stencil/add", controllers.StencilAdd)
+	e.DELETE("/Stencil/delete/:id", controllers.StencilDelete)
 
 
 	e.GET("/Bottom/show/:page/step/:step", controllers.StencilShow)
-	e.GET("/Bottom/add", controllers.NavigationBarShow)
-	e.GET("/Bottom/update", controllers.NavigationBarShow)
+	e.POST("/Bottom/add", controllers.NavigationBarShow)
 	e.GET("/Bottom/delete", controllers.NavigationBarShow)
 
 

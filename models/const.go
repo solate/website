@@ -1,10 +1,15 @@
 package models
 
-import "github.com/Sirupsen/logrus"
+import (
+	"github.com/Sirupsen/logrus"
+)
 
 const (
 	//mongo使用哪个数据库存储
 	DB = "test"
+
+	//自增id管理
+	DBIds = "ids"
 	//模块管理
 	DBStencil = "stencil"
 
@@ -27,7 +32,7 @@ var _errors = map[int]string{
 
 func CheckError(err error) {
 	if err != nil {
-		logrus.Debug(err)
+		logrus.Error(err)
 	}
 }
 
@@ -61,3 +66,4 @@ func ExportJson(reusltCode int, title, Content interface{}, totalCount int) map[
 		"reusltDetail": "unknown error occured",
 	}
 }
+

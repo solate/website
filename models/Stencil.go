@@ -1,20 +1,22 @@
 package models
 
 import (
-	"github.com/solate/website/sys/mgodb"
-	"github.com/Sirupsen/logrus"
 	"gopkg.in/mgo.v2"
 	"gopkg.in/mgo.v2/bson"
+	"github.com/solate/website/sys/mgodb"
 )
 
 type Stencil struct {
-	Image   string `json:"image"`   //模块图片
-	Title   string `json:"title"`   //标题
-	Content string `json:"content"` //内容
-	Price   string `json:"price"`   //内容
-	Time    int32  `json:"time"`    //创建时间
+	Id       int `json:"id"`          //id
+	Image    string `json:"image"`    //模版图片
+	Title    string `json:"title"`    //标题
+	Content  string `json:"content"`  //内容
+	Price    string `json:"price"`    //价格
+	OrderNum string `json:"ordernum"` //排序序号
+	Time     int64  `json:"time"`     //创建时间
 }
 
+//根据分页获得模板
 func GetAllStencil(page, pageSize int) (stencils []Stencil, err error) {
 	query := bson.M{
 
@@ -25,6 +27,7 @@ func GetAllStencil(page, pageSize int) (stencils []Stencil, err error) {
 	return
 }
 
+//获得总数量
 func GetStencilCount() (allCount int, err error) {
 	query := bson.M{
 
@@ -36,14 +39,40 @@ func GetStencilCount() (allCount int, err error) {
 	return
 }
 
-func StencilById() {
-	var value = Stencil{
-
-	}
-
-	dberr := mgodb.Exec(func(mgosess *mgo.Session) error {
-		return mgosess.DB(DB).C(DBStencil).Insert(value)
+//添加模板
+func AddStencil(stencil *Stencil) (err error) {
+	err = mgodb.Exec(func(mgosess *mgo.Session) error {
+		return mgosess.DB(DB).C(DBStencil).Insert(stencil)
 	})
+	return
+}
 
-	logrus.Debug(dberr)
+//更新模板
+func UpdateStencil(stencil *Stencil) (err error) {
+	query := bson.M{
+		"id": stencil.Id,
+	}
+	update := bson.M{
+		"$set": bson.M{
+			"image":    stencil.Image,
+			"title":    stencil.Title,
+			"content":  stencil.Content,
+			"price":    stencil.Price,
+			"ordernum": stencil.OrderNum,
+		},
+	}
+	err = mgodb.Exec(func(mgosess *mgo.Session) error {
+		return mgosess.DB(DB).C(DBStencil).Update(query, update)
+	})
+	return
+}
+//删除
+func DeleteStencil(id string) (err error) {
+	query := bson.M{
+		"id": id,
+	}
+	err = mgodb.Exec(func(mgosess *mgo.Session) error {
+		return mgosess.DB(DB).C(DBStencil).Remove(query)
+	})
+	return
 }
