@@ -8,10 +8,31 @@ import (
 	"net/http"
 	"github.com/labstack/gommon/log"
 	"github.com/solate/website/sys/logs"
+	"github.com/Sirupsen/logrus"
+	"os"
+	"github.com/solate/website/sys/mgodb"
+	"github.com/solate/website/sys/config"
 )
 
 func init() {
-	logs.Init()
+	//初始化相关服务器的连接
+	if err := config.LoadConfig(); err != nil {
+		logrus.Error(err)
+		os.Exit(1)
+	}
+
+	//日志初始化
+	if err := logs.Init(); err != nil {
+		logrus.Error(err)
+		os.Exit(1)
+	}
+
+	//初始化mgodb
+	if err := mgodb.InitMgo(); err != nil {
+		logrus.Error(err)
+		os.Exit(1)
+	}
+
 }
 
 func main() {
@@ -23,6 +44,7 @@ func main() {
 
 	//路由
 	e.GET("/", controllers.Home)
+	e.GET("/Home/show", controllers.HomeShow)
 
 
 	e.Start("127.0.0.1:8888")

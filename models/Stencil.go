@@ -88,3 +88,16 @@ func SearchStencil(title string) (stencils []Stencil, err error) {
 
 	return
 }
+
+
+
+//获得所有菜单
+func GetStencilList() (stencils []Stencil, err error) {
+	query := bson.M{
+
+	}
+	err = mgodb.Exec(func(mgosess *mgo.Session) error {
+		return mgosess.DB(DB).C(DBStencil).Find(query).Sort("ordernum").All(&stencils)
+	})
+	return
+}

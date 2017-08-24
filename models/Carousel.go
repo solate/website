@@ -87,3 +87,15 @@ func SearchCarousel(image string) (carousels []Carousel, err error) {
 
 	return
 }
+
+
+//根据分页获得模板
+func GetCarouselList() (carousels []Carousel, err error) {
+	query := bson.M{
+
+	}
+	err = mgodb.Exec(func(mgosess *mgo.Session) error {
+		return mgosess.DB(DB).C(DBCarousel).Find(query).Sort("ordernum").All(&carousels)
+	})
+	return
+}

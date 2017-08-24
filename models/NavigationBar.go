@@ -15,7 +15,7 @@ type NavigationBar struct {
 	Time     int64  `json:"time"`     //创建时间
 }
 
-//根据分页获得模板
+//根据分页获得导航
 func GetAllNavigationBar(page, pageSize int) (navigationBars []NavigationBar, err error) {
 	query := bson.M{
 
@@ -38,7 +38,7 @@ func GetNavigationBarCount() (allCount int, err error) {
 	return
 }
 
-//添加模板
+//添加导航
 func AddNavigationBar(navigationBar *NavigationBar) (err error) {
 	err = mgodb.Exec(func(mgosess *mgo.Session) error {
 		return mgosess.DB(DB).C(DBNavigationBar).Insert(navigationBar)
@@ -46,7 +46,7 @@ func AddNavigationBar(navigationBar *NavigationBar) (err error) {
 	return
 }
 
-//更新模板
+//更新导航
 func UpdateNavigationBar(navigationBar *NavigationBar) (err error) {
 	query := bson.M{
 		"id": navigationBar.Id,
@@ -64,7 +64,7 @@ func UpdateNavigationBar(navigationBar *NavigationBar) (err error) {
 	return
 }
 
-//删除
+//删除导航
 func DeleteNavigationBar(id int) (err error) {
 	query := bson.M{
 		"id": id,
@@ -74,7 +74,7 @@ func DeleteNavigationBar(id int) (err error) {
 	})
 	return
 }
-
+//查询导航
 func SearchNavigationBar(name string) (navigationBars []NavigationBar, err error) {
 	query := bson.M{
 		"name": name,
@@ -83,5 +83,17 @@ func SearchNavigationBar(name string) (navigationBars []NavigationBar, err error
 		return mgosess.DB(DB).C(DBNavigationBar).Find(query).Sort("ordernum").All(&navigationBars)
 	})
 
+	return
+}
+
+
+//根据分页获得导航
+func GetNavigationBarList() (navigationBars []NavigationBar, err error) {
+	query := bson.M{
+
+	}
+	err = mgodb.Exec(func(mgosess *mgo.Session) error {
+		return mgosess.DB(DB).C(DBNavigationBar).Find(query).Sort("ordernum").All(&navigationBars)
+	})
 	return
 }
