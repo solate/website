@@ -53,9 +53,10 @@ func main() {
 	e.POST("/NavigationBar/search/:name", controllers.NavigationBarSearch)
 
 	//轮播图
-	e.GET("/Carousel/show", controllers.NavigationBarShow)
-	e.POST("/Carousel/add", controllers.NavigationBarShow)
-	e.GET("/Carousel/delete", controllers.NavigationBarShow)
+	e.GET("/Carousel/show/:page/step/:step", controllers.CarouselShow)
+	e.POST("/Carousel/add", controllers.CarouselAdd)
+	e.DELETE("/Carousel/delete/:id", controllers.CarouselDelete)
+	e.POST("/Carousel/search/:images", controllers.CarouselSearch)
 
 	//模版管理
 	e.GET("/Stencil/show/:page/step/:step", controllers.StencilShow)
@@ -63,9 +64,11 @@ func main() {
 	e.DELETE("/Stencil/delete/:id", controllers.StencilDelete)
 	e.POST("/Stencil/search/:title", controllers.StencilSearch)
 
-	e.GET("/Bottom/show/:page/step/:step", controllers.StencilShow)
-	e.POST("/Bottom/add", controllers.NavigationBarShow)
-	e.GET("/Bottom/delete", controllers.NavigationBarShow)
+	//底部
+	//e.GET("/Stencil/show/:page/step/:step", controllers.StencilShow)
+	//e.POST("/Stencil/add", controllers.StencilAdd)
+	//e.DELETE("/Stencil/delete/:id", controllers.StencilDelete)
+	//e.POST("/Stencil/search/:title", controllers.StencilSearch)
 
 
 

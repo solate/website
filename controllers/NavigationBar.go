@@ -9,7 +9,6 @@ import (
 	"strings"
 	"io/ioutil"
 	"github.com/solate/website/models"
-	"fmt"
 )
 
 //导航栏展现

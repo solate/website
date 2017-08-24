@@ -14,6 +14,8 @@ const (
 	DBStencil = "stencil"
 	//导航
 	DBNavigationBar = "navigation"
+	//轮播图
+	DBCarousel = "carousel"
 
 
 	//状态码
