@@ -259,7 +259,7 @@
             adddata += ("<td class=\"\">" + item.content + "</td>");
             adddata += ("<td class=\"\">" + item.price + "</td>");
             adddata += ("<td class=\"\">" + item.ordernum + "</td>");
-            adddata += ("<td class=\"\">" + item.time + "</td>");
+            adddata += ("<td class=\"\">" + getLocalTime(item.time) + "</td>");
             adddata += ("<td class=\"table-action table-operate\"> " +
                 "<a data-toggle='modal' href='#myModal'   onclick='editItem(" + index + ")' ><i class=\"fa fa-pencil\"></i></a> " +
                 "<a data-toggle='modal' href='#'  onclick='deleteItem(" + item.id + ")' ><i class=\"fa fa-trash-o\"></i></a>" +
@@ -269,7 +269,10 @@
         });
         tablebody.append(adddata);
     }
-
+    //时间戳转换成时间
+    function getLocalTime(nS) {
+        return new Date(parseInt(nS) * 1000).toLocaleString().replace(/:\d{1,2}$/,' ');
+    }
 
     //点击编辑按钮的时候
     function saveNewItem() {
@@ -280,15 +283,9 @@
         currentdata.Title = $("#basicTitle").val();
         currentdata.Content = $("#basicContent").val();
         currentdata.Price = $("#basicPrice").val();
-        currentdata.OrderNum = $("#basicOrderNum").val();
+        currentdata.OrderNum = parseInt($("#basicOrderNum").val(), 10);
 
-//        if (currentdata.system == "") {
-//            document.getElementById("basicValue").focus();
-//            alert("所属平台必须填写");
-//            return;
-//        } else {
-//            currentdata.system = parseInt(document.getElementById("basicSystem").value, 10)
-//        }
+
 //        if (currentdata.type == "") {
 //            document.getElementById("basicType").focus();
 //            alert("类型必须填写");
@@ -300,8 +297,8 @@
 //            return;
 //        }
 
-//        currentdata.page = currentPage;
-//        currentdata.step = step;
+        currentdata.page = currentPage;
+        currentdata.step = step;
         $.ajaxSetup({
             contentType: 'application/json'
         });
@@ -322,13 +319,14 @@
         }
     }
 
-
     //清空表单
     function clearForm() {
-//        document.getElementById("basicType").value = "";
-//        document.getElementById("basicValue").value = "";
+        $("#basicImage").val("");
+        $("#basicTitle").val("");
+        $("#basicContent").val("");
+        $("#basicPrice").val("");
+        $("#basicOrderNum").val("");
     }
-
     //点击编辑按钮的时候
     function editItem(i) {
         currentTabIndex = i;

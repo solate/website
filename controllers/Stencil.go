@@ -5,7 +5,6 @@ import (
 	"github.com/labstack/echo"
 	"github.com/solate/website/models"
 	"strconv"
-	"fmt"
 	"encoding/json"
 	"io/ioutil"
 	"time"
@@ -60,11 +59,6 @@ func StencilAdd(c echo.Context) (err error)  {
 	err = json.Unmarshal(requestbody, &currentData)
 	models.CheckError(err)
 
-
-	fmt.Println(currentData, "========1111==========")
-	fmt.Println(currentData.Stencil, "========2222==========")
-
-
 	//获得
 	stencil := currentData.Stencil
 	if stencil.Id > 0 {
@@ -72,11 +66,13 @@ func StencilAdd(c echo.Context) (err error)  {
 		models.CheckError(err)
 	} else {
 		//新增就获得新的id
-		stencil.Id = models.GetId(models.DBStencil)
+		ids, err := models.GetId(models.DBStencil)
+		models.CheckError(err)
+
+		stencil.Id = ids.Id
 		stencil.Time = time.Now().Unix() //创建时间
 
-		fmt.Println(currentData.Stencil, "========3333==========")
-
+		//添加
 		err = models.AddStencil(&stencil)
 		models.CheckError(err)
 
@@ -90,7 +86,10 @@ func StencilAdd(c echo.Context) (err error)  {
 
 //删除
 func StencilDelete(c echo.Context) (err error)  {
-	id := strings.TrimSpace(c.Param("id"))
+	idStr := strings.TrimSpace(c.Param("id"))
+
+	id, err := strconv.Atoi(idStr)
+	models.CheckError(err)
 
 	err = models.DeleteStencil(id)
 	models.CheckError(err)

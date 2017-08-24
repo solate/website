@@ -71,14 +71,25 @@ func main() {
 	//
 	//fmt.Println("============1111===========")
 
-
-	var ids []models.Ids
+	var ids models.Ids
+	change := mgo.Change{
+		Update:    bson.M{"$inc": bson.M{"id": 1}},
+		Upsert:    true,
+		ReturnNew: true,
+	}
 	err = Exec(func(mgosess *mgo.Session) error {
-		return mgosess.DB(models.DB).C(models.DBIds).Find(bson.M{"name":models.DBStencil}).All(&ids)
-
+		_, err := mgosess.DB(models.DB).C(models.DBIds).Find(bson.M{"name": models.DBStencil}).Apply(change, &ids)
+		return err
 
 	})
 
-	fmt.Println(ids)
+	//var ids []models.Ids
+	//err = Exec(func(mgosess *mgo.Session) error {
+	//	return mgosess.DB(models.DB).C(models.DBIds).Find(bson.M{"name":models.DBStencil}).All(&ids)
+	//
+	//
+	//})
+
+	fmt.Println(ids, err)
 
 }

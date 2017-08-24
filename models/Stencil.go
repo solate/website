@@ -12,7 +12,7 @@ type Stencil struct {
 	Title    string `json:"title"`    //标题
 	Content  string `json:"content"`  //内容
 	Price    string `json:"price"`    //价格
-	OrderNum string `json:"ordernum"` //排序序号
+	OrderNum int `json:"ordernum"` //排序序号
 	Time     int64  `json:"time"`     //创建时间
 }
 
@@ -22,7 +22,7 @@ func GetAllStencil(page, pageSize int) (stencils []Stencil, err error) {
 
 	}
 	err = mgodb.Exec(func(mgosess *mgo.Session) error {
-		return mgosess.DB(DB).C(DBStencil).Find(query).Skip(pageSize * (page - 1)).Limit(pageSize).All(&stencils)
+		return mgosess.DB(DB).C(DBStencil).Find(query).Sort("ordernum").Skip(pageSize * (page - 1)).Limit(pageSize).All(&stencils)
 	})
 	return
 }
@@ -67,7 +67,7 @@ func UpdateStencil(stencil *Stencil) (err error) {
 	return
 }
 //删除
-func DeleteStencil(id string) (err error) {
+func DeleteStencil(id int) (err error) {
 	query := bson.M{
 		"id": id,
 	}
