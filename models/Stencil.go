@@ -7,12 +7,12 @@ import (
 )
 
 type Stencil struct {
-	Id       int `json:"id"`          //id
+	Id       int    `json:"id"`       //id
 	Image    string `json:"image"`    //模版图片
 	Title    string `json:"title"`    //标题
 	Content  string `json:"content"`  //内容
 	Price    string `json:"price"`    //价格
-	OrderNum int `json:"ordernum"` //排序序号
+	OrderNum int    `json:"ordernum"` //排序序号
 	Time     int64  `json:"time"`     //创建时间
 }
 
@@ -66,6 +66,7 @@ func UpdateStencil(stencil *Stencil) (err error) {
 	})
 	return
 }
+
 //删除
 func DeleteStencil(id int) (err error) {
 	query := bson.M{
@@ -77,7 +78,7 @@ func DeleteStencil(id int) (err error) {
 	return
 }
 
-func SearchStencil(title string) (stencils []Stencil, err error)  {
+func SearchStencil(title string) (stencils []Stencil, err error) {
 	query := bson.M{
 		"title": title,
 	}

@@ -12,9 +12,8 @@ const (
 	DBIds = "ids"
 	//模块管理
 	DBStencil = "stencil"
-
-	//网页配置
-	Index = "/index.html"
+	//导航
+	DBNavigationBar = "navigation"
 
 
 	//状态码

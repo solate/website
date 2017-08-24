@@ -46,11 +46,11 @@ func main() {
 
 	//路由
 	e.GET("/", controllers.ManageIndex)
-	//首页菜单
+	//导航
 	e.GET("/NavigationBar/show/:page/step/:step", controllers.NavigationBarShow)
 	e.POST("/NavigationBar/add", controllers.NavigationBarAdd)
-	e.POST("/NavigationBar/update", controllers.NavigationBarUpate)
-	e.GET("/NavigationBar/delete", controllers.NavigationBarDelete)
+	e.DELETE("/NavigationBar/delete/:id", controllers.NavigationBarDelete)
+	e.POST("/NavigationBar/search/:name", controllers.NavigationBarSearch)
 
 	//轮播图
 	e.GET("/Carousel/show", controllers.NavigationBarShow)
