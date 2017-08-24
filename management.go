@@ -61,7 +61,7 @@ func main() {
 	e.GET("/Stencil/show/:page/step/:step", controllers.StencilShow)
 	e.POST("/Stencil/add", controllers.StencilAdd)
 	e.DELETE("/Stencil/delete/:id", controllers.StencilDelete)
-
+	e.POST("/Stencil/search/:title", controllers.StencilSearch)
 
 	e.GET("/Bottom/show/:page/step/:step", controllers.StencilShow)
 	e.POST("/Bottom/add", controllers.NavigationBarShow)

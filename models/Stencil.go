@@ -76,3 +76,14 @@ func DeleteStencil(id int) (err error) {
 	})
 	return
 }
+
+func SearchStencil(title string) (stencils []Stencil, err error)  {
+	query := bson.M{
+		"title": title,
+	}
+	err = mgodb.Exec(func(mgosess *mgo.Session) error {
+		return mgosess.DB(DB).C(DBStencil).Find(query).Sort("ordernum").All(&stencils)
+	})
+
+	return
+}

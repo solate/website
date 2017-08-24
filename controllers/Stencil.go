@@ -9,6 +9,7 @@ import (
 	"io/ioutil"
 	"time"
 	"strings"
+	"fmt"
 )
 
 //模版展现
@@ -95,5 +96,19 @@ func StencilDelete(c echo.Context) (err error)  {
 	models.CheckError(err)
 
 	c.JSON(http.StatusOK, models.ExportJson(models.Right_Status, nil, nil, -1))
+	return
+}
+
+func StencilSearch(c echo.Context) (err error)  {
+
+	title := c.Param("title")
+
+	dataList, err := models.SearchStencil(title)
+	models.CheckError(err)
+
+	reusltDetail := make(map[string]interface{})
+	reusltDetail["dataList"] = dataList
+
+	c.JSON(http.StatusOK, models.ExportJson(models.Right_Status, "模板列表", reusltDetail, -1))
 	return
 }

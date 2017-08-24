@@ -14,12 +14,12 @@
                 <div class="form-group">
                     <label class="col-sm-3 control-label">标题: <span class="asterisk"></span></label>
                     <div class="col-sm-5">
-                        <input type="text" name="class_key" class="form-control" value="" placeholder="请填写标题..."/>
+                        <input id="searchTitle"  type="text"  class="form-control" value="" placeholder="请填写标题..."/>
                     </div>
                 </div>
                 <div class="form-group">
                     <div class="col-sm-5 col-sm-offset-3">
-                        <button class="btn btn-primary">提交</button>
+                        <button type="button" class='btn btn-primary' onclick="currentPage=1;searchItem()">查询</button>
                     </div>
                 </div>
             </form>
@@ -358,6 +358,12 @@
             });
         }
 
+    }
+
+    //查询
+    function searchItem() {
+        searchTitle = $("#searchTitle").val()
+        $.post(host + "/Stencil/search/" + searchTitle, null, listToSuccess, "json");
     }
 
 
