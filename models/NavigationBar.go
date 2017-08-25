@@ -92,7 +92,7 @@ func SearchNavigationBar(name string) (navigationBars []NavigationBar, err error
 //根据分页获得导航
 func GetNavigationBarList() (navigationBars []NavigationBar, err error) {
 	query := bson.M{
-
+		"isdisplay": true,
 	}
 	err = mgodb.Exec(func(mgosess *mgo.Session) error {
 		return mgosess.DB(DB).C(DBNavigationBar).Find(query).Sort("ordernum").All(&navigationBars)

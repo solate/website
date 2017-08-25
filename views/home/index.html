@@ -47,13 +47,13 @@
                     </div>
                     <!-- Collect the nav links, forms, and other content for toggling -->
                     <div class="collapse navbar-collapse" id="menu">
-                        <ul class="nav navbar-nav navbar-right">
-                            <li class="active"><a href="#intro">首页</a></li>
-                            <li><a href="#about">注册公司</a></li>
-                            <li><a href="#service">代理记账</a></li>
-                            <li><a href="#works">社保挂靠</a></li>
-                            <li><a href="#contact">公司变更</a></li>
-                        </ul>
+                        <!--<ul class="nav navbar-nav navbar-right">-->
+                            <!--<li class="active"><a href="#intro">首页</a></li>-->
+                            <!--<li><a href="#about">注册公司</a></li>-->
+                            <!--<li><a href="#service">代理记账</a></li>-->
+                            <!--<li><a href="#works">社保挂靠</a></li>-->
+                            <!--<li><a href="#contact">公司变更</a></li>-->
+                        <!--</ul>-->
                     </div>
                     <!-- /.Navbar-collapse -->
 
@@ -68,7 +68,7 @@
 <!-- Section: intro -->
 <section id="intro" class="home-slide text-light">
     <!-- Carousel -->
-    <div id="carousel-example-generic" class="carousel slide" data-ride="carousel">
+    <div id="carousel" class="carousel slide" data-ride="carousel">
         <!-- Indicators -->
         <ol class="carousel-indicators">
             <li data-target="#carousel-example-generic" data-slide-to="0" class="active"></li>
@@ -435,7 +435,153 @@
 <!--<script src="js/owl.carousel.min.js"></script>-->
 <!--<script src="js/nivo-lightbox.min.js"></script>-->
 <script src="js/custom.js"></script>
-<script src="home/contactform/contactform.js"></script>
+<!--<script src="home/contactform/contactform.js"></script>-->
+
+
+<script>
+
+    var menubody //菜单
+    var carouselbody //轮播图
+    var stencilbody //模块
+    var currentListData //返回数据
+    var adddata
+    var host
+
+    //页面载入后先获取默认条数的数据
+    window.onload = function () {
+        host = "http://" + window.location.host
+        searchList();
+    };
+
+
+    //点击提交按钮
+    function searchList() {
+        $.get(host + "/Home/show", null, listToSuccess, "json");
+    }
+
+    //从数据库中获取列表成功
+    function listToSuccess(response, status, xhr) {
+        if (status == "success" && response.reusltCode == "200") {
+            currentListData = response.reusltDetail;
+
+
+            clearMenu();//清空菜单
+            fillMenu(); //填充菜单
+
+//            clearCarousel(); //清空轮播图
+//            fillCarousel(); //填充轮播图
+
+        }
+        //不成功不做处理
+
+    }
+
+    //清空菜单
+    function clearMenu() {
+        menubody = $("#menu");
+        menubody.empty();
+    }
+
+    //填充菜单
+    function fillMenu() {
+        adddata = "";
+        adddata += ("<ul class=\"nav navbar-nav navbar-right\">");
+        adddata += ("<li class=\"active\"><a>首页</a></li>");
+        $.each(currentListData.navigationBarList, function (index, item) {
+            adddata += ("<li><a href=" + item.url + ">" + item.name + "</a></li>");
+        });
+        adddata += "</ul>";
+        menubody.append(adddata);
+    }
+
+//
+//    //清空轮播图
+//    function clearCarousel() {
+//        carouselbody = $("#carousel");
+//        carouselbody.empty();
+//    }
+//
+//    //填充轮播图
+//    function fillCarousel() {
+//        adddata = "";
+//
+//        //数量点部分
+//        adddata += ("<ol class=\"carousel-indicators\">");
+//
+//        adddata += ("<li data-target=\"#carousel-example-generic\" data-slide-to=\"0\" class=\"active\"></li>");
+//        adddata += ("<li data-target=\"#carousel-example-generic\" data-slide-to="+ "1" +"></li>");
+//        adddata += ("<li data-target=\"#carousel-example-generic\" data-slide-to="+ "2" +"></li>");
+//        adddata += "</ol>";
+//
+//        //图片部分
+//        adddata += ("<div class=\"carousel-inner\">");
+//
+//
+//        adddata += ("<div class=\"item active\">");
+//        adddata += ("<img src=\"img/slide1.jpg\" alt=\"slide\">");
+//        adddata += ("<div class=\"header-text hidden-xs\">");
+//        adddata += ("<div class=\"col-md-12 text-center\">");
+//
+//        adddata += ("<h2><span>老王帮你扫清障碍轻松创业</span></h2>");
+//        adddata += ("<br>");
+//        adddata += ("<h3><span>免费查询: 13910736109</span></h3>");
+//        adddata += ("<br>");
+//
+//        adddata += ("<div class=\"\">" +
+//            "<a class=\"btn btn-theme btn-sm btn-min-block\" href=\"#about\">About us</a>" +
+//            "<a class=\"btn btn-theme btn-sm btn-min-block\" href=\"#works\">Our works</a></div>");
+//
+//
+//        adddata += ("</div>");
+//        adddata += ("</div>");
+//        adddata += ("</div>");
+//
+//        $.each(currentListData.carouselList, function (index, item) {
+//
+//            adddata += ("<div class=\"item\">");
+//            adddata += ("<img src=" + item.image + " alt="+ index+ "slide\">");
+//            adddata += ("<div class=\"header-text hidden-xs\">");
+//            adddata += ("<div class=\"col-md-12 text-center\">");
+//
+//            adddata += ("<h2><span>"+item.title+"</span></h2>");
+//            adddata += ("<br>");
+//            adddata += ("<h3><span>"+item.content+"</span></h3>");
+//            adddata += ("<br>");
+//
+//            adddata += ("<div class=\"\">" +
+//                "<a class=\"btn btn-theme btn-sm btn-min-block\" href=\"#about\">About us</a>" +
+//                "<a class=\"btn btn-theme btn-sm btn-min-block\" href=\"#works\">Our works</a></div>");
+//
+//
+//            adddata += ("</div>");
+//            adddata += ("</div>");
+//            adddata += ("</div>");
+//
+//        });
+//
+//        adddata += "</div>";
+//
+//
+//
+//        carouselbody.append(adddata);
+//    }
+//
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</script>
+
 
 </body>
 

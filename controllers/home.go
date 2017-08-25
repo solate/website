@@ -16,9 +16,6 @@ func Home(c echo.Context) error {
 
 func HomeShow(c echo.Context) (err error) {
 
-	totalCount, err := models.GetStencilCount()
-	models.CheckError(err)
-
 	//导航列表
 	navigationBarList, err := models.GetNavigationBarList()
 	models.CheckError(err)
@@ -39,6 +36,6 @@ func HomeShow(c echo.Context) (err error) {
 	reusltDetail["carouselList"] = carouselList
 
 
-	c.JSON(http.StatusOK, models.ExportJson(models.Right_Status, "首页数据", reusltDetail, totalCount))
+	c.JSON(http.StatusOK, models.ExportJson(models.Right_Status, "首页数据", reusltDetail, -1))
 	return
 }
