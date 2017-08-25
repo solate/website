@@ -8,12 +8,13 @@ import (
 
 //轮播图
 type Carousel struct {
-	Id       int    `json:"id"`       //id
-	Image    string `json:"image"`    //模版图片
-	Title    string `json:"title"`    //标题
-	Content  string `json:"content"`  //内容
-	OrderNum int    `json:"ordernum"` //排序序号
-	Time     int64  `json:"time"`     //创建时间
+	Id        int    `json:"id"`        //id
+	Image     string `json:"image"`     //模版图片
+	Title     string `json:"title"`     //标题
+	Content   string `json:"content"`   //内容
+	OrderNum  int    `json:"ordernum"`  //排序序号
+	IsDisplay bool   `json:"isdisplay"` //是否显示
+	Time      int64  `json:"time"`      //创建时间
 }
 
 //根据分页获得模板
@@ -54,10 +55,11 @@ func UpdateCarousel(carousel *Carousel) (err error) {
 	}
 	update := bson.M{
 		"$set": bson.M{
-			"image":    carousel.Image,
-			"title":    carousel.Title,
-			"content":  carousel.Content,
-			"ordernum": carousel.OrderNum,
+			"image":     carousel.Image,
+			"title":     carousel.Title,
+			"content":   carousel.Content,
+			"ordernum":  carousel.OrderNum,
+			"isdisplay": carousel.IsDisplay,
 		},
 	}
 	err = mgodb.Exec(func(mgosess *mgo.Session) error {
@@ -87,7 +89,6 @@ func SearchCarousel(image string) (carousels []Carousel, err error) {
 
 	return
 }
-
 
 //根据分页获得模板
 func GetCarouselList() (carousels []Carousel, err error) {

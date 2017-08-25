@@ -7,13 +7,14 @@ import (
 )
 
 type Stencil struct {
-	Id       int    `json:"id"`       //id
-	Image    string `json:"image"`    //模版图片
-	Title    string `json:"title"`    //标题
-	Content  string `json:"content"`  //内容
-	Price    string `json:"price"`    //价格
-	OrderNum int    `json:"ordernum"` //排序序号
-	Time     int64  `json:"time"`     //创建时间
+	Id        int    `json:"id"`        //id
+	Image     string `json:"image"`     //模版图片
+	Title     string `json:"title"`     //标题
+	Content   string `json:"content"`   //内容
+	Price     string `json:"price"`     //价格
+	OrderNum  int    `json:"ordernum"`  //排序序号
+	IsDisplay bool   `json:"isdisplay"` //是否显示
+	Time      int64  `json:"time"`      //创建时间
 }
 
 //根据分页获得模板
@@ -54,11 +55,12 @@ func UpdateStencil(stencil *Stencil) (err error) {
 	}
 	update := bson.M{
 		"$set": bson.M{
-			"image":    stencil.Image,
-			"title":    stencil.Title,
-			"content":  stencil.Content,
-			"price":    stencil.Price,
-			"ordernum": stencil.OrderNum,
+			"image":     stencil.Image,
+			"title":     stencil.Title,
+			"content":   stencil.Content,
+			"price":     stencil.Price,
+			"ordernum":  stencil.OrderNum,
+			"isdisplay": stencil.IsDisplay,
 		},
 	}
 	err = mgodb.Exec(func(mgosess *mgo.Session) error {
@@ -88,8 +90,6 @@ func SearchStencil(title string) (stencils []Stencil, err error) {
 
 	return
 }
-
-
 
 //获得所有菜单
 func GetStencilList() (stencils []Stencil, err error) {

@@ -8,11 +8,12 @@ import (
 
 //导航
 type NavigationBar struct {
-	Id       int    `json:"id"`       //id
-	Name     string `json:"name"`     //名字
-	Url      string `json:"url"`      //引用那个页面url
-	OrderNum int    `json:"ordernum"` //排序序号
-	Time     int64  `json:"time"`     //创建时间
+	Id        int    `json:"id"`        //id
+	Name      string `json:"name"`      //名字
+	Url       string `json:"url"`       //引用那个页面url
+	OrderNum  int    `json:"ordernum"`  //排序序号
+	IsDisplay bool   `json:"isdisplay"` //是否显示
+	Time      int64  `json:"time"`      //创建时间
 }
 
 //根据分页获得导航
@@ -53,9 +54,10 @@ func UpdateNavigationBar(navigationBar *NavigationBar) (err error) {
 	}
 	update := bson.M{
 		"$set": bson.M{
-			"Name":    navigationBar.Name,
-			"url":    navigationBar.Url,
-			"ordernum": navigationBar.OrderNum,
+			"Name":      navigationBar.Name,
+			"url":       navigationBar.Url,
+			"ordernum":  navigationBar.OrderNum,
+			"isdisplay": navigationBar.IsDisplay,
 		},
 	}
 	err = mgodb.Exec(func(mgosess *mgo.Session) error {
@@ -74,6 +76,7 @@ func DeleteNavigationBar(id int) (err error) {
 	})
 	return
 }
+
 //查询导航
 func SearchNavigationBar(name string) (navigationBars []NavigationBar, err error) {
 	query := bson.M{
@@ -85,7 +88,6 @@ func SearchNavigationBar(name string) (navigationBars []NavigationBar, err error
 
 	return
 }
-
 
 //根据分页获得导航
 func GetNavigationBarList() (navigationBars []NavigationBar, err error) {

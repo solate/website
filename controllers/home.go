@@ -3,7 +3,6 @@ package controllers
 import (
 	"github.com/labstack/echo"
 	"net/http"
-	"strconv"
 	"github.com/solate/website/models"
 )
 

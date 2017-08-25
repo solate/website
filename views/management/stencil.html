@@ -36,6 +36,7 @@
                         <th>内容</th>
                         <th>价格</th>
                         <th>序号</th>
+                        <th>是否显示</th>
                         <th>创建时间</th>
                         <th>操作</th>
                     </tr>
@@ -123,6 +124,18 @@
                                     <div class="form-group">
                                         <label>排序序号</label>
                                         <input type="text" class="form-control" id="basicOrderNum"/>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-body row">
+
+                                <label class="col-sm-3 control-label">是否显示： <span class="asterisk"></span></label>
+                                <div class="col-sm-9">
+                                    <div class="radio-inline">
+                                        <input type="radio" name="basicIsDisplay" value="0" checked/>显示
+                                    </div>
+                                    <div class="radio-inline">
+                                        <input type="radio" name="basicIsDisplay" value="1" />不显示
                                     </div>
                                 </div>
                             </div>
@@ -259,6 +272,7 @@
             adddata += ("<td class=\"\">" + item.content + "</td>");
             adddata += ("<td class=\"\">" + item.price + "</td>");
             adddata += ("<td class=\"\">" + item.ordernum + "</td>");
+            adddata += ("<td class=\"\">" + item.isdisplay + "</td>");
             adddata += ("<td class=\"\">" + getLocalTime(item.time) + "</td>");
             adddata += ("<td class=\"table-action table-operate\"> " +
                 "<a data-toggle='modal' href='#myModal'   onclick='editItem(" + index + ")' ><i class=\"fa fa-pencil\"></i></a> " +
@@ -285,6 +299,11 @@
         currentdata.Price = $("#basicPrice").val();
         currentdata.OrderNum = parseInt($("#basicOrderNum").val(), 10);
 
+        if($("input[name='basicIsDisplay']:checked").val() == "0") {
+            currentdata.IsDisplay = true;
+        } else {
+            currentdata.IsDisplay = false;
+        }
 
 //        if (currentdata.type == "") {
 //            document.getElementById("basicType").focus();
@@ -336,6 +355,11 @@
         $("#basicContent").val(currentListData[i].content);
         $("#basicPrice").val(currentListData[i].price);
         $("#basicOrderNum").val(currentListData[i].ordernum);
+        if(currentListData[i].isdisplay == true) {
+            $("input[type='radio'][name='basicIsDisplay'][value='0']").attr("checked", true);
+        } else {
+            $("input[type='radio'][name='basicIsDisplay'][value='1']").attr("checked", true);
+        }
     }
 
     //删除
