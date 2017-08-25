@@ -117,6 +117,15 @@
                                     </div>
                                 </div>
                             </div>
+                            <div class="modal-body row">
+                                <label class="col-sm-3 control-label">是否显示： <span class="asterisk"></span></label>
+                                <div class="col-sm-9">
+                                    <div class="ckbox ckbox-primary">
+                                        <input type="checkbox" id="basicIsDisplay"  name="basicIsDisplay" checked="checked" />
+                                        <label for="basicIsDisplay">显示</label>
+                                    </div><!-- rdio -->
+                                </div>
+                            </div>
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-default btn-sm" data-dismiss="modal">关闭</button>
@@ -249,6 +258,7 @@
             adddata += ("<td class=\"\">" + item.title + "</td>");
             adddata += ("<td class=\"\">" + item.content + "</td>");
             adddata += ("<td class=\"\">" + item.ordernum + "</td>");
+            adddata += ("<td class=\"\">" + item.isdisplay + "</td>");
             adddata += ("<td class=\"\">" + getLocalTime(item.time) + "</td>");
             adddata += ("<td class=\"table-action table-operate\"> " +
                 "<a data-toggle='modal' href='#myModal'   onclick='editItem(" + index + ")' ><i class=\"fa fa-pencil\"></i></a> " +
@@ -273,6 +283,11 @@
         currentdata.Title = $("#basicTitle").val();
         currentdata.Content = $("#basicContent").val();
         currentdata.OrderNum = parseInt($("#basicOrderNum").val(), 10);
+        if ($("#basicIsDisplay").prop("checked")) {
+            currentdata.IsDisplay = true;
+        } else {
+            currentdata.IsDisplay = false;
+        }
 
         currentdata.page = currentPage;
         currentdata.step = step;
@@ -311,6 +326,11 @@
         $("#basicTitle").val(currentListData[i].title);
         $("#basicContent").val(currentListData[i].content);
         $("#basicOrderNum").val(currentListData[i].ordernum);
+        if(currentListData[i].isdisplay == true) {
+            $("#basicIsDisplay").attr("checked", true);
+        } else {
+            $("#basicIsDisplay").attr("checked", false);
+        }
     }
 
     //删除
