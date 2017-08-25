@@ -54,7 +54,7 @@ func UpdateNavigationBar(navigationBar *NavigationBar) (err error) {
 	}
 	update := bson.M{
 		"$set": bson.M{
-			"Name":      navigationBar.Name,
+			"name":      navigationBar.Name,
 			"url":       navigationBar.Url,
 			"ordernum":  navigationBar.OrderNum,
 			"isdisplay": navigationBar.IsDisplay,

@@ -56,7 +56,7 @@ func main() {
 	e.GET("/Carousel/show/:page/step/:step", controllers.CarouselShow)
 	e.POST("/Carousel/add", controllers.CarouselAdd)
 	e.DELETE("/Carousel/delete/:id", controllers.CarouselDelete)
-	e.POST("/Carousel/search/:images", controllers.CarouselSearch)
+	e.POST("/Carousel/search", controllers.CarouselSearch)
 
 	//模版管理
 	e.GET("/Stencil/show/:page/step/:step", controllers.StencilShow)

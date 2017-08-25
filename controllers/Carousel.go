@@ -100,9 +100,19 @@ func CarouselDelete(c echo.Context) (err error)  {
 
 func CarouselSearch(c echo.Context) (err error)  {
 
-	image := c.Param("image")
+	//获得提交的json数据
+	requestbody, err := ioutil.ReadAll(c.Request().Body)
+	models.CheckError(err)
 
-	dataList, err := models.SearchCarousel(image)
+	type CurrentData struct {
+		SearchImage string `json:"SearchImage"`
+	}
+
+	var currentData CurrentData
+	err = json.Unmarshal(requestbody, &currentData)
+	models.CheckError(err)
+
+	dataList, err := models.SearchCarousel(currentData.SearchImage)
 	models.CheckError(err)
 
 	reusltDetail := make(map[string]interface{})
