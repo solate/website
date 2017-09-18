@@ -1,3 +1,2 @@
-[31mERRO[0m[0000] CreateSession: server returned error on SASL authentication step: Authentication failed.
- 
-[31mERRO[0m[0000] server returned error on SASL authentication step: Authentication failed. 
+time="2017-09-18T17:39:05+08:00" level=error msg="not authorized on test to execute command { count: \"stencil\", query: {} }"
+time="2017-09-18T17:39:05+08:00" level=error msg="not authorized on test to execute command { find: \"stencil\", filter: {}, sort: { ordernum: 1 }, skip: 0, limit: 10, batchSize: 10 }"

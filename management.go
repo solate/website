@@ -72,6 +72,12 @@ func main() {
 
 
 
+	// ------------ 用户部分 --------------
+	e.GET("/login", controllers.Login)
+	e.GET("/register", controllers.Register)
+
+
+
 	e.Start("127.0.0.1:9999")
 
 }

@@ -29,3 +29,21 @@ GOOS=linux go build -ldflags "-w" -o management management.go
 
 scp home zhangjin@59.151.42.5:~/
 
+
+
+## 设计
+
+
+### 用户中心
+
+#### 登录
+
+
+#### 注册
+
+
+#### 登出
+
+#### 用户管理
+
+#### 角色管理
